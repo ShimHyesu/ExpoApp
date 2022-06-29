@@ -1,11 +1,13 @@
-import * as React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React from "react";
+import { StyleSheet } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import RootStack from "./screens/RootStack";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>안녕</Text>
-    </View>
+    <NavigationContainer>
+      <RootStack />
+    </NavigationContainer>
   );
 }
 
