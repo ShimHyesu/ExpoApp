@@ -36,7 +36,7 @@ function MainTab() {
         }}
       />
       <Tab.Screen
-        name="event"
+        name="Search"
         component={SearchScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
