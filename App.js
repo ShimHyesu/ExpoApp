@@ -2,17 +2,15 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import RootStack from "./screens/RootStack";
-import LogContext from "./contexts/LogContext";
+import { LogContextProvider } from "./contexts/LogContext";
 
 export default function App() {
   return (
     <NavigationContainer>
-      {/* Provider에서 value라는 Props 설정 
-      -> Context를 통해 여러 컴포넌트에서 공유 
-      -> 이 컴포넌트 내부에 선언된 모든 컴포넌트에서 Context 값 사용 가능*/}
-      <LogContext.Provider value="안녕하세요">
+      {/* 기존 Context와 달리 객체 형태의 값을 받아왔기에 FeedsScreen 값 수정 필요 */}
+      <LogContextProvider>
         <RootStack />
-      </LogContext.Provider>
+      </LogContextProvider>
     </NavigationContainer>
   );
 }
