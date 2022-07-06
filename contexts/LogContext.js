@@ -1,13 +1,22 @@
 import React, { useState } from "react";
 import { createContext } from "react";
+// 고유한 값 생성해주는 uuid 라이브러리 사용
+// 일반적으로 랜덤하고 고유한 식별자 생성에는 v4 많이 사용
+import { v4 as uuidv4 } from "uuid";
 
-//Provider 전용 컴포넌트를 따로 만드는것이 유지보수성이 더 높음
 const LogContext = createContext();
 
 export function LogContextProvider({ children }) {
-  const [text, setText] = useState("");
+  const [logs, setLogs] = useState([]);
+
+  const onCreate = ({ title, body, date }) => {
+    const log = { id: uuidv4(), title, body, date };
+    // spread 연산자 -> 새로 만든 객체가 맨 앞에 추가
+    setLogs([log, ...logs]);
+  };
+
   return (
-    <LogContext.Provider value={{ text, setText }}>
+    <LogContext.Provider value={{ logs, onCreate }}>
       {children}
     </LogContext.Provider>
   );
