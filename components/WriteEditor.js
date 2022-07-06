@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useRef } from "react";
 import { View, StyleSheet, TextInput } from "react-native";
 
 function WriteEditor({ title, body, onChangeTitle, onChangeBody }) {
+  const bodyRef = useRef();
+
   return (
     <View style={styles.block}>
       <TextInput
@@ -11,15 +13,19 @@ function WriteEditor({ title, body, onChangeTitle, onChangeBody }) {
         returnKeyType="next"
         onChangeText={onChangeTitle}
         value={title}
+        onSubmitEditing={() => {
+          bodyRef.current.focus();
+        }}
       />
       <TextInput
         placeholder="당신의 오늘을 기록해보세요"
         style={styles.bodyInput}
-        //값 지정하지 않으면 true로 지정됨 -> 여러줄 작성 가능
         multiline
         textAlignVertical="top"
         onChangeText={onChangeBody}
         value={body}
+        // TextInput의 Props로 지정해주면 원하는 컴포넌트의 레퍼런스 선택 가능
+        ref={bodyRef}
       />
     </View>
   );
