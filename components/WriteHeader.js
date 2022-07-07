@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import TransparentCircleButton from "./TransparentCircleButton";
 
-function WriteHeader({ onSave }) {
+function WriteHeader({ onSave, onAskRemove, isEditing }) {
   const navigation = useNavigation();
 
   //뒤로가기 버튼
@@ -21,11 +21,16 @@ function WriteHeader({ onSave }) {
       />
 
       <View style={styles.buttons}>
-        <TransparentCircleButton
-          name="delete-forever"
-          color="#ef5350"
-          hasMarginRight
-        />
+        {/* isEditing Props가 true일 때만 삭제버튼 보여주고 이 버튼 눌렀을때 onAskRemove 호출 */}
+        {isEditing && (
+          <TransparentCircleButton
+            name="delete-forever"
+            color="#ef5350"
+            hasMarginRight
+            onPress={onAskRemove}
+          />
+        )}
+
         <TransparentCircleButton
           name="check"
           color="#009688"

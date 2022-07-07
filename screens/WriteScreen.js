@@ -8,6 +8,7 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
@@ -25,7 +26,7 @@ function WriteScreen({ route }) {
   const [body, setBody] = useState(log?.body ?? "");
   const navigation = useNavigation();
 
-  const { onCreate, onModify } = useContext(LogContext);
+  const { onCreate, onModify, onRemove } = useContext(LogContext);
 
   const onSave = () => {
     if (log) {
@@ -41,13 +42,40 @@ function WriteScreen({ route }) {
     navigation.pop();
   };
 
+  // 삭제하기 전 한번 더 물어보는 과정
+  const onAskRemove = () => {
+    Alert.alert(
+      "삭제",
+      "정말로 삭제하시겠어요?",
+      [
+        { text: "취소", style: "cancel" },
+        {
+          text: "삭제",
+          onPress: () => {
+            onRemove(log?.id);
+            navigation.pop();
+          },
+          style: "destructive",
+        },
+      ],
+      {
+        cancelable: true,
+      }
+    );
+  };
+
   return (
     <SafeAreaView style={styles.block}>
       <KeyboardAvoidingView
         style={styles.avoidingView}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
-        <WriteHeader onSave={onSave} />
+        {/* NOT연산자를 두번 사용할 경우 log값이 유효한 객체이면 true, 값이 null이나 undefined면 false */}
+        <WriteHeader
+          onSave={onSave}
+          onAskRemove={onAskRemove}
+          isEditing={!!log}
+        />
         <WriteEditor
           title={title}
           body={body}

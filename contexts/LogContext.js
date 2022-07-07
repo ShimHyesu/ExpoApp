@@ -22,18 +22,21 @@ export function LogContextProvider({ children }) {
   };
 
   // 수정 기능 구현
-  // WriteScreen의 onSave 함수에서 log 라우트 파라미터가 유효하면 수정하는 함수 호출,
-  // 그렇지 않다면 생성하는 함수 호출
   const onModify = (modified) => {
-    // logs 배열을 순회하여 id가 일치하면 log를 교체하고 그렇지 않으면 유지
     const nextLogs = logs.map((log) =>
       log.id === modified.id ? modified : log
     );
     setLogs(nextLogs);
   };
 
+  // 삭제 기능 구현
+  const onRemove = (id) => {
+    const nextLogs = logs.filter((log) => log.id !== id);
+    setLogs(nextLogs);
+  };
+
   return (
-    <LogContext.Provider value={{ logs, onCreate, onModify }}>
+    <LogContext.Provider value={{ logs, onCreate, onModify, onRemove }}>
       {children}
     </LogContext.Provider>
   );
