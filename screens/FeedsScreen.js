@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import FloatingWriteButton from "../components/FloatingWriteButton";
 
@@ -7,11 +7,19 @@ import FeedList from "../components/FeedList";
 
 function FeedsScreen() {
   const { logs } = useContext(LogContext);
+  const [hidden, setHidden] = useState(false);
+
+  // 스크롤 위치에 따라 hidden 값 변경
+  const onScrolledToBottom = (isBottom) => {
+    if (hidden !== isBottom) {
+      setHidden(isBottom);
+    }
+  };
 
   return (
     <View style={styles.block}>
-      <FeedList logs={logs} />
-      <FloatingWriteButton />
+      <FeedList logs={logs} onScrolledToBottom={onScrolledToBottom} />
+      <FloatingWriteButton hidden={hidden} />
     </View>
   );
 }
