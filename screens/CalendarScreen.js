@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { View, Text, StyleSheet, Animated, Button } from "react-native";
 
 function FadeInAndOut() {
@@ -8,29 +8,23 @@ function FadeInAndOut() {
   // <Animated.View>{{(속성값): animation}}</Animated.View> 과 같이 사용
   // animation값 변경할때 Animated.timing(animation,{...}).start() 함수 사용
   const animation = useRef(new Animated.Value(1)).current;
+  const [hidden, setHidden] = useState(false);
+
+  useEffect(() => {
+    Animated.timing(animation, {
+      toValue: hidden ? 0 : 1,
+      useNativeDriver: true,
+    }).start();
+  }, [hidden, animation]);
 
   return (
     <View>
       <Animated.View style={[styles.rectangular, { opacity: animation }]} />
       <Button
-        title="FadeIn"
-        onPress={() =>
-          Animated.timing(animation, {
-            // 어떤 값으로 변경할지 - 필수
-            toValue: 1,
-            // 네이티브 드라이버 사용 여부 - 필수 : 레이아웃과 관련없는 스타일에만 적용 가능
-            useNativeDriver: true,
-          }).start()
-        }
-      />
-      <Button
-        title="FadeOut"
-        onPress={() =>
-          Animated.timing(animation, {
-            toValue: 0,
-            useNativeDriver: true,
-          }).start()
-        }
+        title="Toggle"
+        onPress={() => {
+          setHidden(!hidden);
+        }}
       />
     </View>
   );
