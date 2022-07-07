@@ -15,9 +15,14 @@ import WriteHeader from "../components/WriteHeader";
 import WriteEditor from "../components/WriteEditor";
 import LogContext from "../contexts/LogContext";
 
-function WriteScreen() {
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
+// log 파라미터 인식하여 파라미터 주어졌을때 제목과 내용의 기본값 지정
+function WriteScreen({ route }) {
+  // ?. 문법: 옵셔널 체이닝
+  // null이거나 undefined일 수 있는 객체의 프로퍼티 에러없이 접근 가능
+  const log = route.params?.log;
+
+  const [title, setTitle] = useState(log?.title ?? "");
+  const [body, setBody] = useState(log?.body ?? "");
   const navigation = useNavigation();
 
   const { onCreate } = useContext(LogContext);

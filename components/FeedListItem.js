@@ -1,16 +1,13 @@
 import React from "react";
 import { Platform, Pressable, StyleSheet, Text } from "react-native";
-
-// 방금 전, 3분 전, 1시간 전,.. 과 같은 날짜/시간 관련 다양한 기능 제공하는 라이브러리
-// format: 다양한 형태로 날짜 포맷
-// formatDistanceToNow: 현재 시각 기준으로 단어 사용해 시간 나타냄
 import { format, formatDistanceToNow } from "date-fns";
 import { ko } from "date-fns/locale";
+
+import { useNavigation } from "@react-navigation/native";
 
 function formatDate(date) {
   const d = new Date(date);
   const now = Date.now();
-  // 단위 밀리세컨드 -> 1000으로 나눠줌
   const diff = (now - d.getTime()) / 1000;
 
   // 1분 미만
@@ -25,9 +22,7 @@ function formatDate(date) {
 }
 
 function truncate(text) {
-  // 정규식을 사용해 모든 줄 바꿈 문자 제거
   const replaced = text.toString().replace(/\n/g, "");
-  // 100자 이상이면 자르고 줄임표 붙여주기
   if (replaced.length <= 100) {
     return replaced;
   }
@@ -36,6 +31,12 @@ function truncate(text) {
 
 function FeedListItem({ log }) {
   const { title, body, date } = log;
+  const navigation = useNavigation();
+
+  // 현재 props로 받아온 log객체를 WriteScreen의 파라미터로 넣어 화면 열기
+  const onPress = () => {
+    navigation.navigate("Write", { log });
+  };
 
   return (
     <Pressable
@@ -44,6 +45,7 @@ function FeedListItem({ log }) {
         Platform.OS == "ios" && pressed && { backgroundColor: "#efefef" },
       ]}
       android_ripple={{ color: "#ededed" }}
+      onPress={onPress}
     >
       <Text style={styles.date}>{formatDate(date)}</Text>
       <Text style={styles.title}>{title}</Text>
