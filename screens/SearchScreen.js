@@ -5,6 +5,7 @@ import SearchContext from "../contexts/SearchContext";
 import LogContext from "../contexts/LogContext";
 // 재사용
 import FeedList from "../components/FeedList";
+import EmptySearchResult from "../components/EmptySearchResult";
 
 function SearchScreen({ navigation }) {
   const { keyword } = useContext(SearchContext);
@@ -19,6 +20,14 @@ function SearchScreen({ navigation }) {
           // text.includes 문자열 내장 함수 : 텍스트에 특정 문자열이 존재하는지 확인 -> true/false
           [log.title, log.body].some((text) => text.includes(keyword))
         );
+
+  if (keyword === "") {
+    return <EmptySearchResult type="EMPTY_KEYWORD" />;
+  }
+
+  if (filtered.length === 0) {
+    return <EmptySearchResult type="NOT_FOUND" />;
+  }
 
   return (
     <View style={styles.block}>
