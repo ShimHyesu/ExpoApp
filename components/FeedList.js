@@ -5,16 +5,21 @@ import FeedListItem from "./FeedListItem";
 
 function FeedList({ logs, onScrolledToBottom }) {
   const onScroll = (e) => {
-    // contentSize.height: Flatlist 내부의 전체 크기
-    // layoutMeasurement.height: 화면에 나타난 Flatlist의 실제 크기
-    // contentOffset.y: 스크롤할 때마다 늘어나는 값
-    // contentSize.height - layoutMeasurement.height - contentOffset.y 계산값이 0에 가까워지면 스크롤이 바닥에 가까워지는 것
+    // 예외처리: onScrolledToBottom Props가 설정되지 않았을때 함수가 없으면 아무것도 하지 않도록
+    if (!onScrolledToBottom) {
+      return;
+    }
+
     const { contentSize, layoutMeasurement, contentOffset } = e.nativeEvent;
 
     const distanceFromBottom =
       contentSize.height - layoutMeasurement.height - contentOffset.y;
 
-    if (distanceFromBottom < 72) {
+    // 예외처리: 항목 개수가 적어서 스크롤이 필요 없는 상황
+    if (
+      distanceFromBottom < 72 &&
+      contentSize.height > layoutMeasurement.height
+    ) {
       onScrolledToBottom(true);
     } else {
       onScrolledToBottom(false);
