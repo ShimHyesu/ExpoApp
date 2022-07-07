@@ -12,11 +12,16 @@ function FloatingWriteButton({ hidden }) {
 
   const animation = useRef(new Animated.Value(0)).current;
 
+  // Animated.spring 함수: 값이 스프링처럼 통통 튀는 효과
+  // tension/friction , speed/bounciness 조합으로 사용
   useEffect(() => {
-    Animated.timing(animation, {
-      // hidden값 true일때 컴포넌트 아래로 이동시키고 투명도 낮춤
+    Animated.spring(animation, {
       toValue: hidden ? 1 : 0,
       useNativeDriver: true,
+      // 강도(기본값 40)
+      tension: 45,
+      // 감속(기본값 7)
+      friction: 5,
     }).start();
   }, [animation, hidden]);
 
