@@ -1,16 +1,11 @@
 import React, { useState } from "react";
 import { createContext } from "react";
-// 고유한 값 생성해주는 uuid 라이브러리 사용
-// 일반적으로 랜덤하고 고유한 식별자 생성에는 v4 많이 사용
-// 최상위 디렉터리(index.js)에 하단 추가해야함 -> expo에서는 package.json의 main 확인
-// import 'react-native-get-random-values';
 import { v4 as uuidv4 } from "uuid";
 
 const LogContext = createContext();
 
 export function LogContextProvider({ children }) {
   const [logs, setLogs] = useState(
-    // Array.from 함수를 이용해 길이가 10인 배열을 생성한 뒤 map함수를 통해 객체 배열로 변환
     Array.from({ length: 10 })
       .map((_, index) => ({
         id: uuidv4(),
@@ -23,12 +18,22 @@ export function LogContextProvider({ children }) {
 
   const onCreate = ({ title, body, date }) => {
     const log = { id: uuidv4(), title, body, date };
-    // spread 연산자 -> 새로 만든 객체가 맨 앞에 추가
     setLogs([log, ...logs]);
   };
 
+  // 수정 기능 구현
+  // WriteScreen의 onSave 함수에서 log 라우트 파라미터가 유효하면 수정하는 함수 호출,
+  // 그렇지 않다면 생성하는 함수 호출
+  const onModify = (modified) => {
+    // logs 배열을 순회하여 id가 일치하면 log를 교체하고 그렇지 않으면 유지
+    const nextLogs = logs.map((log) =>
+      log.id === modified.id ? modified : log
+    );
+    setLogs(nextLogs);
+  };
+
   return (
-    <LogContext.Provider value={{ logs, onCreate }}>
+    <LogContext.Provider value={{ logs, onCreate, onModify }}>
       {children}
     </LogContext.Provider>
   );
