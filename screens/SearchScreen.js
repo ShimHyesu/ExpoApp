@@ -1,14 +1,19 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, Text, StyleSheet } from "react-native";
+import SearchContext from "../contexts/SearchContext";
 
 function SearchScreen() {
+  const { keyword, onChangeText } = useContext(SearchContext);
+
   return (
-    <View>
-      <Text>글을 검색할 수 있는 화면</Text>
+    <View style={styles.block}>
+      <Text>{keyword}</Text>
     </View>
   );
 }
 
 export default SearchScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  block: {},
+});
