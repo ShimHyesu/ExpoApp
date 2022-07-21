@@ -4,6 +4,7 @@ import { format } from "date-fns";
 
 import CalendarView from "../components/CalendarView";
 import LogContext from "../contexts/LogContext";
+import FeedList from "../components/FeedList";
 
 function CalendarScreen() {
   const { logs } = useContext(LogContext);
@@ -21,11 +22,21 @@ function CalendarScreen() {
     return acc;
   }, {});
 
+  // 현재 선택된 날짜로 로그를 필터링하여 FeedList에 전달하고 ListHeaderComponent에는 CalendarView 설정
+  const filteredLogs = logs.filter(
+    (log) => format(new Date(log.date), "yyyy-MM-dd") === selectedDate
+  );
+
   return (
-    <CalendarView
-      markedDates={markedDates}
-      selectedDate={selectedDate}
-      onSelectDate={setSelectedDate}
+    <FeedList
+      logs={filteredLogs}
+      ListHeaderComponent={
+        <CalendarView
+          markedDates={markedDates}
+          selectedDate={selectedDate}
+          onSelectDate={setSelectedDate}
+        />
+      }
     />
   );
 }

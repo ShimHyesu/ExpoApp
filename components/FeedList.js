@@ -3,7 +3,7 @@ import { FlatList, StyleSheet, View } from "react-native";
 
 import FeedListItem from "./FeedListItem";
 
-function FeedList({ logs, onScrolledToBottom }) {
+function FeedList({ logs, onScrolledToBottom, ListHeaderComponent }) {
   const onScroll = (e) => {
     // 예외처리: onScrolledToBottom Props가 설정되지 않았을때 함수가 없으면 아무것도 하지 않도록
     if (!onScrolledToBottom) {
@@ -35,6 +35,8 @@ function FeedList({ logs, onScrolledToBottom }) {
       ItemSeparatorComponent={() => <View style={styles.separator} />}
       // 스크롤이 바닥에 가까워지면 글쓰기 버튼 숨기고, 멀어지면 글쓰기 버튼 보여주기 위해 사용
       onScroll={onScroll}
+      // ListHeaderComponent Props를 통해 Flatlist의 내용 상단부에 특정 컴포넌트 보여줄 수 있음
+      ListHeaderComponent={ListHeaderComponent}
     />
   );
 }
