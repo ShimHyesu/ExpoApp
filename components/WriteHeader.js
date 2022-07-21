@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View, Pressable, Text } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
@@ -12,9 +13,36 @@ import TransparentCircleButton from "./TransparentCircleButton";
 function WriteHeader({ onSave, onAskRemove, isEditing, date, onChangeDate }) {
   const navigation = useNavigation();
 
+  // DateTimePickerModal의 모드 상태관리 -> date, time, datetime
+  const [mode, setMode] = useState("date");
+  const [isVisible, setIsVisible] = useState(false);
+
   //뒤로가기 버튼
   const onGoBack = () => {
     navigation.pop();
+  };
+
+  // 날짜 눌렀을때 date모드
+  const onPressDate = () => {
+    setMode("date");
+    setIsVisible(true);
+  };
+
+  // 시간 눌렀을때 time모드
+  const onPressTime = () => {
+    setMode("time");
+    setIsVisible(true);
+  };
+
+  // 날짜 선택했을때 호출되는 함수
+  const onConfirm = (selectedDate) => {
+    setIsVisible(false);
+    onChangeDate(selectedDate);
+  };
+
+  // 날짜 선택 취소했을때 호출되는 함수
+  const onCancel = () => {
+    setIsVisible(false);
   };
 
   return (
@@ -28,14 +56,22 @@ function WriteHeader({ onSave, onAskRemove, isEditing, date, onChangeDate }) {
 
       {/* 날짜 및 시간 */}
       <View style={styles.center}>
-        <Pressable>
+        <Pressable onPress={onPressDate}>
           <Text>{format(new Date(date), "PPP", { locale: ko })}</Text>
         </Pressable>
         <View style={styles.separator} />
-        <Pressable>
+        <Pressable onPress={onPressTime}>
           <Text>{format(new Date(date), "p", { locale: ko })}</Text>
         </Pressable>
       </View>
+      {/* 날짜와 시간 선택할 수 있는 모달 */}
+      <DateTimePickerModal
+        isVisible={isVisible}
+        mode={mode}
+        onConfirm={onConfirm}
+        onCancel={onCancel}
+        date={date}
+      />
 
       {/* 삭제버튼 */}
       <View style={styles.buttons}>
