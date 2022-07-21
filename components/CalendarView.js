@@ -5,19 +5,23 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { Calendar } from "react-native-calendars";
 
-function CalendarView() {
-  // 달력에 표시하기 위해 markedDates 객체 사용 -> 키 값은 yyyy-mm-dd형태
-  // marked값을 true로 하면 날짜에 점, selected값을 true로 하면 날짜 배경색 변경
-  const markedDates = {
-    "2022-07-08": { selected: true },
-    "2022-07-02": { marked: true },
-    "2022-07-15": { marked: true },
+function CalendarView({ markedDates, selectedDate, onSelectDate }) {
+  const markedSelectedDate = {
+    ...markedDates,
+    [selectedDate]: {
+      selected: true,
+      marked: markedDates[selectedDate]?.marked,
+    },
   };
 
   return (
     <Calendar
       style={styles.calendar}
-      markedDates={markedDates}
+      markedDates={markedSelectedDate}
+      // 달력에서 날짜를 선택했을 때 onSelectDate호출
+      onDayPress={(day) => {
+        onSelectDate(day.dateString);
+      }}
       theme={{
         selectedDayBackgroundColor: "#009688",
         arrowColor: "#009688",
