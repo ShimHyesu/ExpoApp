@@ -2,7 +2,6 @@ import React, { useState, useContext } from "react";
 // 화면에서 기본적으로 보여지는 줄 수 초과할 경우
 // 안드로이드는 별 문제x, iOS는 하단 내용 잘리게 됨 -> KeyboardAvoidingView 적용
 import {
-  SafeAreaView,
   Text,
   StyleSheet,
   StatusBar,
@@ -10,6 +9,7 @@ import {
   Platform,
   Alert,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 
 import WriteHeader from "../components/WriteHeader";
@@ -25,19 +25,22 @@ function WriteScreen({ route }) {
   const [title, setTitle] = useState(log?.title ?? "");
   const [body, setBody] = useState(log?.body ?? "");
   const navigation = useNavigation();
+  // date 상태 관리
+  const [date, setDate] = useState(log ? new Date(log.date) : new Date());
 
   const { onCreate, onModify, onRemove } = useContext(LogContext);
 
+  // onSave에서 수정하거나 새로 저장할때 date상태 사용하도록 변경
   const onSave = () => {
     if (log) {
       onModify({
         id: log.id,
-        date: log.date,
+        date: date.toISOString(),
         title,
         body,
       });
     } else {
-      onCreate({ title, body, date: new Date().toISOString() });
+      onCreate({ title, body, date: date.toISOString() });
     }
     navigation.pop();
   };
@@ -70,11 +73,13 @@ function WriteScreen({ route }) {
         style={styles.avoidingView}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
-        {/* NOT연산자를 두번 사용할 경우 log값이 유효한 객체이면 true, 값이 null이나 undefined면 false */}
+        {/* date와 onChangeDate를 Props로 넣어줌 */}
         <WriteHeader
           onSave={onSave}
           onAskRemove={onAskRemove}
           isEditing={!!log}
+          date={date}
+          onChangeDate={setDate}
         />
         <WriteEditor
           title={title}
